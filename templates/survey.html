@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+{# this title block overrides the title block in _base.html #} 
+{% block title %}Survey{% endblock %}
+{# this content block overrides the content block in _base.html #} 
+{% block content %}
+<h2>Svara här tack:</h2>
+<form method="post" action="/append">
+    <input placeholder="Skriv vad du heter här!" type="text" name="Textruta_att_skriva_namn_i" required>
+    <input placeholder="Skriv vad du tycker här!" type="text" name="Textruta_att_skriva_i" required>
+    <br><br>
+    <input type="submit" value="Append">
+</form>
+
+<h3>Andra skrev:</h3>
+<div class="opinions-container">
+    {% for post in data %}
+        <div class="kommentar">
+            <p><strong>Namn:</strong> {{ post.namn if post.namn else 'Anonym' }}</p>
+            <p><strong>Åsikt:</strong> {{ post.åsikt }}</p>
+            <p><small style="color: gray;">Skickat: {{ post.tidpunkt }}</small></p>
+        </div>
+    {% else %}
+        <p>Bli först med kommentar</p>
+    {% endfor %}
+</div>
+{% endblock %}

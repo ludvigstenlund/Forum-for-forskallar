@@ -1,16 +1,18 @@
 
 {% extends 'base.html' %}
 {# this title block overrides the title block in _base.html #} 
-{% block title %}Survey{% endblock %}
+{% block title %}Login{% endblock %}
 {# this content block overrides the content block in _base.html #} 
 {% block content %}
-<h2>Svara här tack:</h2>
+<h2>Logga in</h2>
 <form method="post" action="/append">
-    <input placeholder="Skriv vad du heter här!" type="text" name="Textruta_att_skriva_namn_i" required>
-    <input placeholder="Skriv vad du tycker här!" type="text" name="Textruta_att_skriva_i" required>
-    <br><br>
-    <input type="submit" value="Append">
+    <input type="text" name="username" placeholder="Skriv ditt användarnamn" value=""><br>
+    <input type="text" name="password" placeholder="Skriv ditt lösenord" value="">
+    <input type="submit" value="Set">
 </form>
+    <p>Session value:</p>
+    <a href="/clear">Clear session value</a>
+    <br><a href="/session-info">Show session info</a>
 
 <h3>Andra skrev:</h3>
 <div class="opinions-container">

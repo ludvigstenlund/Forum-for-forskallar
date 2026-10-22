@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{# this title block overrides the title block in _base.html #} 
+{% block title %}Hem och en fin bild på Gju{% endblock %}
+{# this content block overrides the content block in _base.html #} 
+{% block content %}
+    <h2>Woohooo min startsida</h2>
+    <br>
+    <a href="/survey">Gör undersökningen:</a>
+    <br><br>
+    <p>Här är en kul bild:</p>
+    <img src="/static/img/tveksam_gru.png" alt="Gru fast lite tveksamt">
+    <a href="/logout">Logga ut</a>
+
+{% endblock %}
