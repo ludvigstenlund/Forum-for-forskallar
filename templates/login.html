@@ -13,20 +13,8 @@
     <input type="text" name="password" placeholder="Skriv ditt lösenord" value="">
     <input type="submit" value="Set">
 </form>
+
     <p>Session value:</p>
     <a href="/clear">Clear session value</a>
     <br><a href="/session-info">Show session info</a>
-
-<h3>Andra skrev:</h3>
-<div class="opinions-container">
-    {% for post in data %}
-        <div class="kommentar">
-            <p><strong>Namn:</strong> {{ post.namn if post.namn else 'Anonym' }}</p>
-            <p><strong>Åsikt:</strong> {{ post.åsikt }}</p>
-            <p><small style="color: gray;">Skickat: {{ post.tidpunkt }}</small></p>
-        </div>
-    {% else %}
-        <p>Bli först med kommentar</p>
-    {% endfor %}
-</div>
 {% endblock %}

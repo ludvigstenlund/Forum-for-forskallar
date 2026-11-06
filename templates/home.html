@@ -1,17 +1,61 @@
 {% extends 'base.html' %}
 {# this title block overrides the title block in _base.html #} 
-{% block title %}Hem och en fin bild på Gju{% endblock %}
+{% block title %}Forum HEM{% endblock %}
 {# this content block overrides the content block in _base.html #} 
 {% block content %}
-    <h2>Woohooo min startsida</h2>
-    <br>
-    <a href="/survey">Gör undersökningen:</a>
-    <br><br>
-    <p>Här är en kul bild:</p>
-    <img src="/static/img/tveksam_gru.png" alt="Gru fast lite tveksamt">
+    <h1>Välkommen {{ session['username'] }}!</h1>
     <a href="/logout">Logga ut</a>
 
-    <a href="/clear">Clear session value</a>
-    <br><a href="/session-info">Show session info</a>
+    <hr>
+
+
+    <h3>Starta en ny tråd</h3>
+    <form action="/skapa-trad" method="POST">
+        <input type="text" name="trad_rubrik" placeholder="Namnge en ny tråd:" required>
+        <button type="submit">Skapa tråd</button>
+    </form>
+
+    <hr>
+
+
+    <h3>Skriv ett inlägg i en tråd</h3>
+    <form action="/skapa-inlagg" method="POST">
+        <label for="topic_id">Välj tråd:</label>
+        <select name="topic_id" id="topic_id" required>
+            <option value="">-- Välj tråd --</option>
+            {% for topic in topics %}
+                <option value="{{ topic.id }}">{{ topic.rubrik }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <textarea name="innehall" placeholder="Vad vill du skriva i tråden?" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Publicera inlägg</button>
+    </form>
+
+    <hr>
+
+    <!-- Lista: Visa alla inlägg -->
+<h3>Trådar och inlägg</h3>
+{% for topic in topics %}
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; border-radius: 5px; background-color: #f9f9f9;">
+        <h4 style="margin: 0 0 10px 0;">
+            Tråd: {{ topic.rubrik }} <span style="font-size: 0.8em; font-weight: normal; color: #666;">(Startad av: {{ topic.topic_skapare }})</span>
+        </h4>
+        
+        <h5>Inlägg:</h5>
+        {% if topic.inlagg %}
+            {% for post in topic.inlagg %}
+                <div style="border-left: 3px solid #000000; padding-left: 10px; margin-bottom: 10px;">
+                    <p style="margin: 0; font-size: 0.9em;"><strong>{{ post.post_anvandare }}</strong> ({{ post.skapad }}):</p>
+                    <p style="margin: 5px 0 0 0;">{{ post.innehall }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="font-style: italic; color: #999;">Inga inlägg i denna tråd ännu.</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
 
 {% endblock %}
