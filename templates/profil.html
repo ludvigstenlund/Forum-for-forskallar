@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{# this title block overrides the title block in _base.html #} 
+{% block title %}Forum HEM{% endblock %}
+{# this content block overrides the content block in _base.html #} 
+{% block content %}
+    <h1>Välkommen {{ session['username'] }}!</h1>
+<div>Din epost-adress är {{ session['epost'] }}</div>
+<hr>
+<a href="/logout">Logga ut</a>
+
+{% endblock %}

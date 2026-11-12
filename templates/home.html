@@ -4,7 +4,6 @@
 {# this content block overrides the content block in _base.html #} 
 {% block content %}
     <h1>Välkommen {{ session['username'] }}!</h1>
-    <a href="/logout">Logga ut</a>
 
     <hr>
 
@@ -38,7 +37,7 @@
     <!-- Lista: Visa alla inlägg -->
 <h3>Trådar och inlägg</h3>
 {% for topic in topics %}
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; border-radius: 5px; background-color: #f9f9f9;">
+    <div class="topic_list">
         <h4 style="margin: 0 0 10px 0;">
             Tråd: {{ topic.rubrik }} <span style="font-size: 0.8em; font-weight: normal; color: #666;">(Startad av: {{ topic.topic_skapare }})</span>
         </h4>

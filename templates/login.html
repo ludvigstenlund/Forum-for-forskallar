@@ -8,13 +8,21 @@
 
 <div>{{ msg }}</div> 
 
-<form method="post" action="/append">
+<form method="post" action="/login">
     <input type="text" name="username" placeholder="Skriv ditt användarnamn" value=""><br>
     <input type="text" name="password" placeholder="Skriv ditt lösenord" value="">
     <input type="submit" value="Set">
 </form>
 
-    <p>Session value:</p>
-    <a href="/clear">Clear session value</a>
-    <br><a href="/session-info">Show session info</a>
+<h3>Har du inget konto? skapa ett här</h3>
+<form method="post" action="/skapa_konto">
+    <input type="text" name="NYTTusername" placeholder="Skapa ditt användarnamn" value=""><br>
+    <input type="text" name="NYTTpassword" placeholder="Skapa ditt lösenord" value=""><br>
+    <input type="text" name="REGISTRERA_epost" placeholder="Din epost-adress" value="">
+    <input type="submit" value="Skapa konto">
+</form>
+
+<p>Session value:</p>
+<a href="/clear">Clear session value</a>
+<br><a href="/session-info">Show session info</a>
 {% endblock %}

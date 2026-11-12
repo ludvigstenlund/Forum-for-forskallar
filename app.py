@@ -10,59 +10,86 @@ def get_db_connection(): #ansluter till databasen
         database="fff"  #Forum För Fårskallar
     )
 
-tradskapare = "testar"
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
+#---HOMEPAGE:----------------------------------------
 
 @app.route('/')
 def index():
-    if session.get('loggedin'):
-        db = get_db_connection()
-        
-        
-        cursor_topics = db.cursor(dictionary=True)
-        query_topics = """
-            SELECT topic.id, topic.rubrik, anvandare.usern AS topic_skapare 
-            FROM topic 
-            LEFT JOIN anvandare ON topic.tradskapare = anvandare.id
-        """
-        cursor_topics.execute(query_topics)
-        alla_topics = cursor_topics.fetchall()
-        cursor_topics.close()
-
-        
-        cursor_posts = db.cursor(dictionary=True)
-        query_posts = """ 
-            SELECT 
-                inlagg.topic_id,
-                inlagg.innehall, 
-                inlagg.skapad, 
-                anvandare.usern AS post_anvandare
-            FROM inlagg 
-            LEFT JOIN anvandare ON inlagg.anvandare_id = anvandare.id 
-            ORDER BY inlagg.skapad DESC
-        """
-        cursor_posts.execute(query_posts)
-        alla_inlagg = cursor_posts.fetchall()
-        cursor_posts.close()
-        db.close()
-
-
-
-        for topic in alla_topics:
-
-            topic['inlagg'] = [p for p in alla_inlagg if p['topic_id'] == topic['id']]
-
-        return render_template('home.html', topics=alla_topics)
-    else:
+    if not session.get('loggedin'):
         return render_template('login.html', msg='DU MÅSTE LOGGA IN FÖR ÅTKOMST!')
 
+    db = get_db_connection()
+    
+
+    cursor_topics = db.cursor(dictionary=True)
+    query_topics = """
+        SELECT topic.id, topic.rubrik, anvandare.usern AS topic_skapare 
+        FROM topic 
+        LEFT JOIN anvandare ON topic.tradskapare = anvandare.id
+        ORDER BY topic.skapad DESC
+    """
+    cursor_topics.execute(query_topics)
+    alla_topics = cursor_topics.fetchall()
+    cursor_topics.close()
+
+    
+    cursor_INLAGG = db.cursor(dictionary=True)
+    query_INLAGG = """ 
+        SELECT 
+            inlagg.topic_id,
+            inlagg.innehall, 
+            inlagg.skapad, 
+            anvandare.usern AS post_anvandare
+        FROM inlagg 
+        LEFT JOIN anvandare ON inlagg.anvandare_id = anvandare.id 
+        ORDER BY inlagg.skapad DESC
+    """
+    cursor_INLAGG.execute(query_INLAGG)
+    alla_inlagg = cursor_INLAGG.fetchall()
+    cursor_INLAGG.close()
+    db.close()
 
 
-@app.route('/append', methods=['POST'])
+
+    for topic in alla_topics:
+
+        topic['inlagg'] = [p for p in alla_inlagg if p['topic_id'] == topic['id']]
+
+    return render_template('home.html', topics=alla_topics)
+    
+#---Profil:----------------------------------------
+
+@app.route('/profil')
+def profil():
+    if not session.get('loggedin'):
+       return render_template('login.html', msg='DU MÅSTE LOGGA IN FÖR ÅTKOMST!')
+    return render_template('profil.html')
+
+#---Skapa konto:----------------------------------------
+        
+@app.route('/skapa_konto', methods=['GET', 'Post'])
+def skapa_konto():
+
+    if request.form['NYTTusername'] != '' and request.form['NYTTpassword'] !='' and request.form['REGISTRERA_epost'] !='':
+        db = get_db_connection()
+        mycursor = db.cursor()
+        sql = "INSERT INTO anvandare (usern, pswrd, epost) VALUES (%s, %s, %s)"
+        val = (request.form['NYTTusername'], request.form['NYTTpassword'], request.form['REGISTRERA_epost'])
+        mycursor.execute(sql, val)
+        db.commit()
+        return redirect(url_for('index'))
+    else: 
+        return render_template('login.html', msg="DU MÅSTE FYLLA I ALLA UPPGIFTER FÖR ATT SKAPA KONTO")
+
+#---APPEND FORM FRÅN INLOGGNING:----------------------------------------
+
+@app.route('/login', methods=['GET', 'Post'])
 def append_login():
-    if 'username' in request.form and 'password' in request.form:
+    if request.form['username'] != '' and request.form['password'] != '':
+    
         username = request.form['username']
         password = request.form['password']
 
@@ -85,19 +112,23 @@ def append_login():
             return redirect(url_for('index'))
         else:
             return render_template('login.html', msg='Användare med det lösenordet finns inte!')
+    else:
+        return render_template('login.html', msg='Fyll i både användarnamn och lösenord!')
     
-
+#---LOGOUT:----------------------------------------
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
+#---INFO OM SESSIONEN:----------------------------------------
 
 @app.route('/session-info')
 def session_info():
     return f"Session data: {dict(session)}"
 
+#---SKAPA EN TRÅD:----------------------------------------
 
 @app.route('/skapa-trad', methods=['POST'])
 def skapa_trad():

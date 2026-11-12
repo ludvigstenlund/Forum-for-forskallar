@@ -5,8 +5,10 @@ html, body {
 }
 nav {
     margin: 0;
-    background-color: #a5c266;
+    background-color: #d5e0be;
     padding: 1rem;
+    border: 2px solid #556142;
+    padding: 10px;
 }
 main {
     padding: 1rem;
@@ -26,4 +28,11 @@ footer {
     padding: 10px; 
     margin-bottom: 10px; 
     border-radius: 5px
+}
+
+.topic_list {
+    background-color: #d5e0be;  
+    border: 2px solid #556142;
+    border-radius: 5px;
+    padding: 10px;
 }
